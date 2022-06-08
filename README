@@ -1,0 +1,14 @@
+Robert-Andrei Raucescu 335CB
+SO Tema 3 README
+
+Pasii de executie ai programului:
+    - Se initializeaza loader-ul cu so_init_loader, functia a fost preluata din laboratorul 6
+    - Pentru fiecare segment rezultat din apelarea parser-ului, se initializeaza o structura ce contine un vector de bool de dimensiunea numarului de pagini al segmentului ce indica daca segmentul este sau nu mapat. Aceasta structura se retine in campul data al fiecarui segment si initial este doar 0.
+    - Cand handler-ul este folosit, initial acesta verifica daca semnalul este unul SIGSEGV, in caz contrar se ruleaza handler-ul default. 
+    -Daca este un semnal de acest tip, se parcurge fiecare segment si verifica daca adresa semnalului face parte din segmentul curent de verificat. In caz contrar, se ruleaza handler-ul default. 
+    -Odata gasit segmentul, variabila ok este setat pe 1 pentru a retine acest fapt, iar apoi se calculeaza indexul paginii care a generat semnalul.
+    -Daca pagina nu este mapata se determina dimensiunea ramasa de citit din fisier pana cand ajungem la sfarsitul fisierului sau datele de citit ating dimeniunea unei pagini. In caz contrar (segmentul este mapat), se ruleaza handler-ul default.
+    -Daca este ceva de citit, se citeste dimeniunea exacta determinata anterior, iar daca dimensiunea este mai mica de o pagina, restul zonei se zeroizeaza.
+    -Se calculeaza adresa de memorie unde pagina trebuie mapata si se mapeaza aceasta, initial doar cu permisiuni de write.
+    -Se copiaza continutul citit din fisier la adresa mapata si se acorda permisiunile segmentului pentru pagina curenta.
+    -In final, pagina este marcata ca mapata in datele segmentului.
